@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import LiveBroadcast from '@/components/LiveBroadcast'
 import User from '@/components/User'
 import Home from '@/components/Home'
+import CreateStore from '@/components/CreateStore'
 
 Vue.use(Router)
 
@@ -20,6 +21,10 @@ export default new Router({
       path: '/user',
       name: 'User',
       component: User
+    },{
+      path: '/create-store',
+      name: 'CreateStore',
+      component: CreateStore
     }
   ]
 })

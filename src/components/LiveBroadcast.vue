@@ -1,10 +1,10 @@
 <template>
   <div class="live-broadcast">
-    <el-row>
+    <el-row v-if="live_broadcast.url">
       <el-col :xs="24" :sm="24" :md="12">
         <div class="video-content">
-          <div class="fb-video" :data-href="liveBroadcastURL" data-width="500" data-allowfullscreen="true">
-            <blockquote :cite="liveBroadcastURL" class="fb-xfbml-parse-ignore">
+          <div class="fb-video" :data-href="live_broadcast.url" data-width="500" data-allowfullscreen="true">
+            <blockquote :cite="live_broadcast.url" class="fb-xfbml-parse-ignore">
               <a href="https://www.facebook.com/734001673476978/videos/1060604714123487/"></a>
             </blockquote>
           </div>
@@ -18,7 +18,7 @@
               <p class="product-number">編號：{{product.no}}</p>
               <p class="product-name">名稱：{{product.name}}</p>
               <p class="product-price">價格：{{product.price}}</p>
-              <div class="product-counter">
+              <div class="product-counter" v-if="user_profile.identity === 'buyer'">
                 <el-input-number size="mini" :min="0" v-model="product.amount"></el-input-number>
               </div>
             </div>
@@ -27,6 +27,9 @@
         </div>
       </el-col>
     </el-row>
+    <div class="no-live-broadcast" v-if="!live_broadcast.url">
+      <p>目前沒有直播喲～</p>
+    </div>
     <Model title="您的訂單" v-if="isShowOrders" @close="isShowOrders = false">
       <ul class="orders">
         <li class="order" v-for="order in orders">
@@ -49,6 +52,7 @@
 
 <script>
 import Model from "./common/Model.vue";
+import { mapState } from 'vuex'
 export default {
   name: 'LiveBroadcast',
   components: {
@@ -56,55 +60,15 @@ export default {
   },
   data () {
     return {
-      liveBroadcastURL: "https://www.facebook.com/littleroom9488/videos/797034557329831/",
-      products: [
-        {
-          no: 1,
-          name: '李成敏',
-          img: 'http://hebei.hebnews.cn/attachement/png/site2/20160408/b8ca3a7bf9831871b54f49.png',
-          price: 1000,
-          amount: 0
-        },
-        {
-          no: 2,
-          name: '李成敏',
-          img: 'http://hbimg.b0.upaiyun.com/bbbb00b32e1fb0303d5420302669523e0f83813035d2b-NKtopu_fw658',
-          price: 1000,
-          amount: 0
-        },
-        {
-          no: 3,
-          name: '李成敏',
-          img: 'http://images.china.cn/attachement/jpg/site1000/20151128/c03fd54abc3e17c35bd844.jpg',
-          price: 1000,
-          amount: 0
-        },
-        {
-          no: 4,
-          name: '李成敏',
-          img: 'http://www.mlito.com/wp-content/uploads/2017/09/0021ccb6e83e17bd008e4a.jpg',
-          price: 1000,
-          amount: 0
-        },
-        {
-          no: 5,
-          name: '李成敏',
-          img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxuYm7l2sU396HQIalfco_JxR7E1S7xOOFoFM32_mr9A2xluzD',
-          price: 1000,
-          amount: 0
-        },
-        {
-          no: 6,
-          name: '李成敏',
-          img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtgbl764O1SnnT9jkOHtVWTma7tJDSzkyCV4lWPfD3HOfCS0biKA',
-          price: 1000,
-          amount: 0
-        }
-      ],
       isShowOrders: false
     }
   },
   computed: {
+    ...mapState({
+      products: 'products',
+      live_broadcast: 'live_broadcast',
+      user_profile: 'user_profile',
+    }),
     orders() {
       return this.products.filter(order => {
         return order.amount !== 0
@@ -218,6 +182,19 @@ export default {
     }
     @media only screen and (max-width: 450px) {
       height: 100vh; 
+    }
+  }
+  .no-live-broadcast {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    p {
+      width: 160px;
+      font-size: 20px;
+      color: #555;
+      position: absolute;
+      top: calc(50% - 14px);
+      left: calc(50% - 80px);
     }
   }
   .orders {

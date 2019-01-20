@@ -2,9 +2,16 @@
   <header :class="{home: isHome}">
       <img class="logo" src="http://hanwen360.com/img/shufa/ks/7/d935a1efce89a539.png" alt="" @click="$router.push('/')">
       <div class="menu login">
-        <template v-if="authorized">
-          <ul class="other-nav">
+        <template v-if="authorized && user_profile.identity === 'buyer'">
+          <ul class="nav">
             <router-link tag="li" to="/live-broadcast">直播</router-link>
+          </ul>
+          <button @click="$router.push('/user')">我的頁面</button>
+        </template>
+        <template v-if="authorized && user_profile.identity === 'seller'">
+          <ul class="nav">
+            <router-link tag="li" to="/live-broadcast">直播</router-link>
+            <router-link tag="li" to="/create-store">創建賣場</router-link>
           </ul>
           <button @click="$router.push('/user')">我的頁面</button>
         </template>
@@ -15,19 +22,27 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: "Header",
   created() {},
   data() {
     return {
       isHome: false,
-      profile: {},
-      authorized: false
     };
   },
   created() {
     this.judgementPath();
     this.FBinit();
+  },
+  computed: {
+    ...mapState({
+      user_profile: 'user_profile',
+      live_broadcast: 'live_broadcast'
+    }),
+    authorized() {
+      return Object.keys(this.user_profile).length !== 0
+    }
   },
   methods: {
     judgementPath () {
@@ -56,6 +71,7 @@ export default {
       let vm = this
       FB.api('/me?fields=name,id,email', function (response) {
         console.log('res in graphAPI', response)
+        vm.$store.commit('setUserProfile', {...response, identity: 'seller'});
         vm.$set(vm, 'profile', response)
       })
     },
@@ -79,13 +95,10 @@ export default {
     statusChangeCallback (response) {
       let vm = this
       if (response.status === 'connected') {
-        vm.authorized = true
         vm.getProfile()
-      } else if (response.status === 'not_authorized') {
-        vm.authorized = false
       } else {
-        vm.authorized = false
-      }
+        vm.$store.commit('clearUserProfile');
+      } 
     }
   },
   watch: {
@@ -141,7 +154,7 @@ header {
       margin-left: 40px;
       position: relative;
     }
-    .other-nav {
+    .nav {
       display: inline-block;
       @media only screen and (max-width: 767px) {
         display: none;
@@ -174,7 +187,7 @@ header {
       border: 0;
       border-radius: 5px;
       color: white;
-      font-size: 24px;
+      font-size: 20px;
       background-color: #4267b2 !important;
       i {
         margin-right: 5px;

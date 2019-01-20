@@ -3,7 +3,7 @@
     <video autoplay loop muted>
       <source src="../assets/Pexels Videos 4830.mp4">
     </video>
-    <button @click="$router.push('/login')">登入開始體驗</button>
+    <button @click="$router.push('/live-broadcast')">開始體驗</button>
   </div>
 </template>
 
