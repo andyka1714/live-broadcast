@@ -72,6 +72,11 @@ export default {
       border-bottom-right-radius: 10px;
       line-height: 24px;
       min-height: 300px;
+      max-height: calc(100vh - 80px);
+      overflow-y: scroll;
+    }
+    .body::-webkit-scrollbar {
+      display: none;
     }
     @media only screen and (max-width: 768px) {
       width: 90%;   

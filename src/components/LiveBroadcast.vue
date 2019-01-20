@@ -56,7 +56,7 @@ export default {
   },
   data () {
     return {
-      liveBroadcastURL: "https://www.facebook.com/734001673476978/videos/1060604714123487/",
+      liveBroadcastURL: "https://www.facebook.com/littleroom9488/videos/797034557329831/",
       products: [
         {
           no: 1,
@@ -123,16 +123,13 @@ export default {
   },
   methods: {
     FBinit() {
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '2269456716676684',
-          cookie     : true,
-          xfbml      : true,
-          version    : 'v2.9'
-        });
-        FB.AppEvents.logPageView();
-        console.log('fbAsyncInit')
-      };
+      FB.init({
+        appId      : '2269456716676684',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v2.9'
+      });
+      FB.AppEvents.logPageView();
     },
     showOrders() {
       this.isShowOrders = true;
@@ -143,6 +140,7 @@ export default {
 
 <style lang="scss"scoped>
 .live-broadcast {
+  padding-top: 81px;
   .video-content {
     text-align: center;
     background-color: black;
@@ -150,6 +148,7 @@ export default {
     justify-content: center;
     align-items: center;
     min-height: calc(100vh - 81px);
+    overflow: hidden;
   }
   .product-content::-webkit-scrollbar {
     display: none;
@@ -162,15 +161,6 @@ export default {
     height: calc(100vh - 81px);
     width: 100%;
     text-align: center;
-    // @media only screen and (max-width: 1650px) {
-    //   width: 540px;
-    // }
-    // @media only screen and (min-width: 1651px) {
-    //   width: 800px;
-    // }
-    // @media only screen and (max-width: 685px) {
-    //   width: calc(80vw + 30px);
-    // }
     .product-card{
       max-width: 245px;
       max-height: 370px;
@@ -225,6 +215,9 @@ export default {
       border: 0;
       background-color: #0066FF;
       cursor: pointer;
+    }
+    @media only screen and (max-width: 450px) {
+      height: 100vh; 
     }
   }
   .orders {
