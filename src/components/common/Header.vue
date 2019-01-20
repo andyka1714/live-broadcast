@@ -37,9 +37,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 header {
-  height: 93px;
+  height: 81px;
   box-shadow: 0 4px 12px -2px rgba(177, 177, 177, 0.5);
-  line-height: 93px;
+  line-height: 81px;
   position: relative;
   transition: .3s all;
 
@@ -61,6 +61,8 @@ header {
     color: #999799;
     font-size: 19.7px;
     font-weight: 300;
+    display: flex;
+    align-items: center;
     li {
       display: inline-block;
       margin-left: 40px;
@@ -79,7 +81,6 @@ header {
       color: #219ea9;
       width: 166.1px;
       background: #fff;
-      margin-top: 28px;
       margin-right: 35.2px;
       margin-left: 42.5px;
       border-radius: 20px;

@@ -17,9 +17,11 @@ export default {
 }
 </script>
 
-<style lang="sass">
-*
-  margin: 0
-  padding: 0
-  box-sizing: border-box
+<style lang="scss">
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+}
 </style>

@@ -23,15 +23,37 @@
               </div>
             </div>
           </div>
+          <button class="order-button" @click="showOrders">查看訂單</button>
         </div>
       </el-col>
     </el-row>
+    <Model title="您的訂單" v-if="isShowOrders" @close="isShowOrders = false">
+      <ul class="orders">
+        <li class="order" v-for="order in orders">
+          <div class="order-img" :style="{ backgroundImage: `url(${order.img})`}"></div>
+          <div class="order-info">
+            <p class="order-number">編號：{{order.no}}</p><!--
+            --><p class="order-name">名稱：{{order.name}}</p><!--
+            --><p class="order-price">價格：{{order.price}}</p><!--
+            --><p class="order-amount">數量：{{order.amount}}</p>
+          </div>
+        </li>
+      </ul>
+      <div class="total-price">
+        <div class="line"></div>
+        <span>總共費用：{{totalPrice}}</span>
+      </div>
+    </Model>
   </div>
 </template>
 
 <script>
+import Model from "./common/Model.vue";
 export default {
   name: 'LiveBroadcast',
+  components: {
+    Model
+  },
   data () {
     return {
       liveBroadcastURL: "https://www.facebook.com/734001673476978/videos/1060604714123487/",
@@ -78,7 +100,22 @@ export default {
           price: 1000,
           amount: 0
         }
-      ]
+      ],
+      isShowOrders: false
+    }
+  },
+  computed: {
+    orders() {
+      return this.products.filter(order => {
+        return order.amount !== 0
+      })
+    },
+    totalPrice() {
+      const orders = this.orders
+      return orders.reduce(
+        (accumulator, currentValue) => {
+        return accumulator + (currentValue.price * currentValue.amount);
+      },0)
     }
   },
   mounted() {
@@ -96,36 +133,44 @@ export default {
         FB.AppEvents.logPageView();
         console.log('fbAsyncInit')
       };
-    }
+    },
+    showOrders() {
+      this.isShowOrders = true;
+    },
   },
 }
 </script>
 
 <style lang="scss"scoped>
 .live-broadcast {
-  .video-content, .product-content {
-    min-height: calc(100vh - 93px);
-  }
   .video-content {
     text-align: center;
     background-color: black;
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: calc(100vh - 81px);
+  }
+  .product-content::-webkit-scrollbar {
+    display: none;
   }
   .product-content {
     margin: 0 auto;
     padding: 20px 0;
     position: relative;
-    @media only screen and (max-width: 1650px) {
-      width: 540px;
-    }
-    @media only screen and (min-width: 1651px) {
-      width: 800px;
-    }
-    @media only screen and (max-width: 685px) {
-      width: calc(80vw + 30px);
-    }
+    overflow-y: scroll;
+    height: calc(100vh - 81px);
+    width: 100%;
+    text-align: center;
+    // @media only screen and (max-width: 1650px) {
+    //   width: 540px;
+    // }
+    // @media only screen and (min-width: 1651px) {
+    //   width: 800px;
+    // }
+    // @media only screen and (max-width: 685px) {
+    //   width: calc(80vw + 30px);
+    // }
     .product-card{
       max-width: 245px;
       max-height: 370px;
@@ -139,7 +184,6 @@ export default {
       margin: 5px 5px 40px;
       cursor: pointer;
       .cover-img {
-        border: 1px solid;
         height: 65%;
         max-height: 255px;
         background-size: cover;
@@ -170,6 +214,49 @@ export default {
         }
 
       }
+    }
+    .order-button {
+      display: block;
+      margin: 0 auto;
+      padding: 5px 10px;
+      font-size: 20px;
+      color: white;
+      border-radius: 10px;
+      border: 0;
+      background-color: #0066FF;
+      cursor: pointer;
+    }
+  }
+  .orders {
+    padding: 10px;
+    .order {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      .order-img {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+        background-size: cover;
+        background-position: top center;
+        border-radius: 5px;
+      }
+      .order-info {
+        width: calc(100% - 60px);
+        p {
+          width: 50%;
+          display: inline-block;
+        }
+      }
+    }
+  }
+  .total-price {
+    text-align: right;
+    .line {
+      height: 1px;
+      background-color: #999;
+      margin-bottom: 10px;
     }
   }
 }
