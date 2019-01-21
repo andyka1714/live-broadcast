@@ -7,7 +7,7 @@ import store from './index'
 
 Vue.use(ElementUI)
 
-let base = 'hey'
+let base = 'http://private-08d53-paimei.apiary-mock.com'
 let noTransform = false
 
 axios.interceptors.response.use((response) => {
@@ -17,7 +17,6 @@ axios.interceptors.response.use((response) => {
         case 401:
             store.commit('logout');
             Vue.prototype.$cookies.remove("token");
-            router.push('/login');
             break;
         case 422:
             var errors = error.response.data.errors
@@ -58,5 +57,18 @@ axios.interceptors.response.use((response) => {
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Accept'] = 'application/json';
 export default {
+    setToken({
+        commit
+    }, token) {
+        console.log('hahahaha')
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        commit('setToken', token);
+    },
+    async login({}) {
+        let url = `${base}/login`
+        let res = await axios.post(url)
+        console.log('..........', res)
+        return res.data
+    },
     
 }

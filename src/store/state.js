@@ -1,4 +1,5 @@
 const state = {
+	token: '',
 	user_profile: {},
 	products: [
         {

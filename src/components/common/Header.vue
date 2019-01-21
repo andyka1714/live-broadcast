@@ -2,19 +2,12 @@
   <header :class="{home: isHome}">
       <img class="logo" src="http://hanwen360.com/img/shufa/ks/7/d935a1efce89a539.png" alt="" @click="$router.push('/')">
       <div class="menu login">
-        <template v-if="authorized && user_profile.identity === 'buyer'">
-          <ul class="nav">
-            <router-link tag="li" to="/live-broadcast">直播</router-link>
-          </ul>
+        <ul class="nav">
+          <router-link tag="li" to="/live-broadcast">直播</router-link>
+          <router-link tag="li" to="/create-store">創建賣場</router-link>
+          <router-link tag="li" to="/orders-info">訂單資訊</router-link>
+        </ul>
           <button @click="$router.push('/user')">我的頁面</button>
-        </template>
-        <template v-if="authorized && user_profile.identity === 'seller'">
-          <ul class="nav">
-            <router-link tag="li" to="/live-broadcast">直播</router-link>
-            <router-link tag="li" to="/create-store">創建賣場</router-link>
-          </ul>
-          <button @click="$router.push('/user')">我的頁面</button>
-        </template>
         <button @click="login" class="FB-login" v-if="!authorized"><i class="fab fa-facebook-f"></i>登入</button>
         <button @click="logout" class="FB-login" v-if="authorized"><i class="fab fa-facebook-f"></i>登出</button>
       </div>
@@ -79,7 +72,8 @@ export default {
       let vm = this
       FB.login(function (response) {
         console.log('res', response)
-        vm.statusChangeCallback(response)
+        let token = response.authResponse.accessToken
+        vm.statusChangeCallback(response, token)
       }, {
         scope: 'email, public_profile',
         return_scopes: true
@@ -92,12 +86,18 @@ export default {
         vm.statusChangeCallback(response)
       })
     },
-    statusChangeCallback (response) {
-      let vm = this
+    statusChangeCallback (response, token) {
       if (response.status === 'connected') {
-        vm.getProfile()
+        this.getProfile();
+        console.log(this)
+        this.$store.dispatch('setToken', token);
+        this.$store.dispatch('login')
+          .then(res => {
+            console.log(res.data)
+          });
       } else {
-        vm.$store.commit('clearUserProfile');
+        this.$store.commit('clearUserProfile');
+        this.$router.push('/')
       } 
     }
   },

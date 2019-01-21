@@ -23,7 +23,7 @@
               </div>
             </div>
           </div>
-          <button class="order-button" @click="showOrders">查看訂單</button>
+          <button class="order-button" @click="showOrders" v-if="user_profile.identity === 'buyer'">查看訂單</button>
         </div>
       </el-col>
     </el-row>
@@ -129,7 +129,7 @@ export default {
       max-width: 245px;
       max-height: 370px;
       width: 40vw;
-      height: 55vw;
+      // height: 55vw;
       border: 1px #ddd solid;
       border-radius: 10px;
       overflow: hidden;
@@ -138,8 +138,8 @@ export default {
       margin: 5px 5px 40px;
       cursor: pointer;
       .cover-img {
-        height: 65%;
-        max-height: 255px;
+        height: 40vw;
+        max-height: 245px;
         background-size: cover;
         background-position: top center;
       }
@@ -157,10 +157,6 @@ export default {
         margin: 5px 5px 20px;
       }
       @media only screen and (max-width: 420px) {
-        height: 60vw;
-        .cover-img {
-          height: 55%;
-        }
         .product-info {
           p {
             font-size: 12px;
