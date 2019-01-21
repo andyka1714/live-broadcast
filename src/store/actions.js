@@ -93,5 +93,10 @@ export default {
         let res = await axios.get(url)
         return res.data
     },
+    async buyAProduct({}, data) {
+        let url = `${base}/stream/${data.stream_id}/order`
+        let res = await axios.put(url, data)
+        return res.data
+    },
     
 }

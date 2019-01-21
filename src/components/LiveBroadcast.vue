@@ -19,7 +19,7 @@
               <p class="product-name">名稱：{{product.title}}</p>
               <p class="product-price">價格：{{product.price}}</p>
               <div class="product-counter">
-                <el-input-number size="mini" :min="0" v-model="product.amount"></el-input-number>
+                <el-input-number size="mini" :min="0" v-model="product.amount" @change="function(e){buyProduct(index, e)}"></el-input-number>
               </div>
             </div>
           </div>
@@ -64,12 +64,7 @@ export default {
     }
   },
   created() {
-    this.productList = this.products.map(product => {
-          return {
-            ...product,
-            amount: 0
-          }
-        })
+    
   },
   computed: {
     ...mapState({
@@ -93,6 +88,12 @@ export default {
   mounted() {
     this.FBinit();
     this.getProduct();
+    this.productList = this.products.map(product => {
+      return {
+        ...product,
+        amount: 0
+      }
+    })
   },
   methods: {
     FBinit() {
@@ -108,11 +109,19 @@ export default {
       this.isShowOrders = true;
     },
     getProduct() {
-      this.$store.dispatch('getProduct', this.stream_info.stream_id)
+      this.$store.dispatch('getProduct', this.stream_info.id)
         .then(res => {
           console.log(res.data)
           this.$store.commit('setProduct', res.data);
         })
+    },
+    buyProduct(index, e) {
+      let data = {
+        quantity: e,
+        product_id: this.productList[index].id,
+        stream_id: this.stream_info.id
+      }
+      this.$store.dispatch('buyAProduct', data)
     }
   },
 }
