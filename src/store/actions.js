@@ -60,14 +60,37 @@ export default {
     setToken({
         commit
     }, token) {
-        console.log('hahahaha')
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         commit('setToken', token);
     },
     async login({}) {
         let url = `${base}/login`
         let res = await axios.post(url)
-        console.log('..........', res)
+        return res.data
+    },
+    async getProfile({}) {
+        let url = `${base}/profile`
+        let res = await axios.get(url)
+        return res.data
+    },
+    async editProfile({}, data) {
+        let url = `${base}/profile`
+        let res = await axios.put(url, data)
+        return res.data
+    },
+    async createStream({}, data) {
+        let url = `${base}/stream`
+        let res = await axios.post(url, data)
+        return res.data
+    },
+    async closeStream({}, id) {
+        let url = `${base}/stream/${id}/close`
+        let res = await axios.post(url)
+        return res.data
+    },
+    async getProduct({}, id) {
+        let url = `${base}/stream/${id}/product`
+        let res = await axios.get(url)
         return res.data
     },
     

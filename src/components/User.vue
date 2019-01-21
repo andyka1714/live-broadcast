@@ -5,31 +5,49 @@
       <el-row :gutter="10">
         <div class="field">
           <p>名字：</p><!--
-          --><el-input placeholder="請輸入您的名字"></el-input>
+          --><el-input placeholder="請輸入您的名字" v-model="profile.recipient_name"></el-input>
         </div>
         <div class="field">
           <p>電話：</p><!--
-          --><el-input placeholder="請輸入電話"></el-input>
+          --><el-input placeholder="請輸入電話" v-model="profile.recipient_phone"></el-input>
         </div>
         <div class="field">
           <p>地址：</p><!--
-          --><el-input placeholder="請輸入地址"></el-input>
+          --><el-input placeholder="請輸入地址" v-model="profile.recipient_address"></el-input>
         </div>
       </el-row>
-      <button class="save">儲存</button>
+      <button class="save" @click="submit">儲存</button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: "User",
   data() {
     return {
-
+      profile: {
+        recipient_name: '',
+        recipient_phone: '',
+        recipient_address: '',
+      }
     };
   },
-  methods: {}
+  computed: {
+    ...mapState({
+      user_profile: 'user_profile',
+    }),
+  },
+  created() {
+    if (!this.$cookies.get("token")) this.$router.push("/");
+    this.profile = this.user_profile.profile.data;
+  },
+  methods: {
+    submit() {
+      this.$store.dispatch('editProfile', this.profile)
+    }
+  }
 };
 </script>
 

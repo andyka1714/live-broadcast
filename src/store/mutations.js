@@ -8,7 +8,10 @@ export default {
     clearUserProfile(state, payload) {
     	state.user_profile = {}
     },
-    setLiveBroadcastURL(state, payload) {
-    	state.live_broadcast = {...state.live_broadcast, url: payload}
+    setStreamInfo(state, payload) {
+    	state.stream_info = payload
+    },
+    setProduct(state, payload) {
+    	state.products = payload
     }
 }

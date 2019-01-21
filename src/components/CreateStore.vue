@@ -4,8 +4,12 @@
       <p class="title">建立賣場：</p>
       <el-row :gutter="10">
         <div class="field">
-          <p>名字：</p><!--
-          --><el-input placeholder="請輸入您的直撥網址" v-model="url"></el-input>
+          <p>賣場名稱：</p><!--
+          --><el-input placeholder="請輸入您的賣場名稱" v-model="stream_info.name"></el-input>
+        </div>
+        <div class="field">
+          <p>直播網址：</p><!--
+          --><el-input placeholder="請輸入您的直播網址" v-model="stream_info.url"></el-input>
         </div>
       </el-row>
       <button class="submit" @click="createStore">建立</button>
@@ -18,13 +22,20 @@ export default {
   name: "User",
   data() {
     return {
-      url: ''
+      stream_info: {
+        name: '',
+        url: ''
+      }
     };
   },
   methods: {
     createStore() {
-      this.$store.commit('setLiveBroadcastURL', this.url)
-      this.$router.push('/live-broadcast')
+      this.$store.dispatch('createStream', this.stream_info)
+        .then(res => {
+          console.log(res.data)
+          this.$store.commit('setStreamInfo', res.data)
+          this.$router.push('/live-broadcast')
+        })
     }
   }
 };
@@ -55,12 +66,12 @@ export default {
         display: inline-block;
       }
       p {
-        width: 50px;
+        width: 80px;
         line-height: 40px;
         text-align: right;
       }
       .el-input {
-        width: calc(100% - 50px);
+        width: calc(100% - 80px);
       }
     }
     .submit {

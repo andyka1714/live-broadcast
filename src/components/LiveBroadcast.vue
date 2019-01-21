@@ -1,10 +1,10 @@
 <template>
   <div class="live-broadcast">
-    <el-row v-if="live_broadcast.url">
+    <el-row v-if="stream_info.url">
       <el-col :xs="24" :sm="24" :md="12">
         <div class="video-content">
-          <div class="fb-video" :data-href="live_broadcast.url" data-width="500" data-allowfullscreen="true">
-            <blockquote :cite="live_broadcast.url" class="fb-xfbml-parse-ignore">
+          <div class="fb-video" :data-href="stream_info.url" data-width="500" data-allowfullscreen="true">
+            <blockquote :cite="stream_info.url" class="fb-xfbml-parse-ignore">
               <a href="https://www.facebook.com/734001673476978/videos/1060604714123487/"></a>
             </blockquote>
           </div>
@@ -12,31 +12,30 @@
       </el-col>
       <el-col :xs="24" :sm="24" :md="12">
         <div class="product-content">
-          <div class="product-card" v-for="product in products">
-            <div class="cover-img" :style="{ backgroundImage: `url(${product.img})`}"></div>
+          <div class="product-card" v-for="(product, index) in productList">
+            <div class="cover-img" :style="{ backgroundImage: `url(${product.image_url})`}"></div>
             <div class="product-info">
-              <p class="product-number">編號：{{product.no}}</p>
-              <p class="product-name">名稱：{{product.name}}</p>
+              <p class="product-number">編號：{{index + 1}}</p>
+              <p class="product-name">名稱：{{product.title}}</p>
               <p class="product-price">價格：{{product.price}}</p>
-              <div class="product-counter" v-if="user_profile.identity === 'buyer'">
+              <div class="product-counter">
                 <el-input-number size="mini" :min="0" v-model="product.amount"></el-input-number>
               </div>
             </div>
           </div>
-          <button class="order-button" @click="showOrders" v-if="user_profile.identity === 'buyer'">查看訂單</button>
+          <button class="order-button" @click="showOrders">查看訂單</button>
         </div>
       </el-col>
     </el-row>
-    <div class="no-live-broadcast" v-if="!live_broadcast.url">
+    <div class="no-live-broadcast" v-if="!stream_info.url">
       <p>目前沒有直播喲～</p>
     </div>
     <Model title="您的訂單" v-if="isShowOrders" @close="isShowOrders = false">
       <ul class="orders">
-        <li class="order" v-for="order in orders">
-          <div class="order-img" :style="{ backgroundImage: `url(${order.img})`}"></div>
+        <li class="order" v-for="(order, index) in orders">
+          <div class="order-img" :style="{ backgroundImage: `url(${order.image_url})`}"></div>
           <div class="order-info">
-            <p class="order-number">編號：{{order.no}}</p><!--
-            --><p class="order-name">名稱：{{order.name}}</p><!--
+            <p class="order-name">名稱：{{order.title}}</p><!--
             --><p class="order-price">價格：{{order.price}}</p><!--
             --><p class="order-amount">數量：{{order.amount}}</p>
           </div>
@@ -60,17 +59,26 @@ export default {
   },
   data () {
     return {
-      isShowOrders: false
+      isShowOrders: false,
+      productList: []
     }
+  },
+  created() {
+    this.productList = this.products.map(product => {
+          return {
+            ...product,
+            amount: 0
+          }
+        })
   },
   computed: {
     ...mapState({
       products: 'products',
-      live_broadcast: 'live_broadcast',
+      stream_info: 'stream_info',
       user_profile: 'user_profile',
     }),
     orders() {
-      return this.products.filter(order => {
+      return this.productList.filter(order => {
         return order.amount !== 0
       })
     },
@@ -84,6 +92,7 @@ export default {
   },
   mounted() {
     this.FBinit();
+    this.getProduct();
   },
   methods: {
     FBinit() {
@@ -98,6 +107,13 @@ export default {
     showOrders() {
       this.isShowOrders = true;
     },
+    getProduct() {
+      this.$store.dispatch('getProduct', this.stream_info.stream_id)
+        .then(res => {
+          console.log(res.data)
+          this.$store.commit('setProduct', res.data);
+        })
+    }
   },
 }
 </script>

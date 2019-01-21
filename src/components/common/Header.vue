@@ -66,7 +66,6 @@ export default {
       let vm = this
       FB.api('/me?fields=name,id,email', function (response) {
         console.log('res in graphAPI', response)
-        vm.$store.commit('setUserProfile', {...response, identity: 'seller'});
         vm.$set(vm, 'profile', response)
       })
     },
@@ -91,14 +90,15 @@ export default {
     statusChangeCallback (response, token) {
       if (response.status === 'connected') {
         this.getProfile();
-        console.log(this)
+        this.$cookies.set("token", token);
         this.$store.dispatch('setToken', token);
         this.$store.dispatch('login')
           .then(res => {
-            console.log(res.data)
+            this.$store.commit('setUserProfile', {...res.data});
           });
       } else {
         this.$store.commit('clearUserProfile');
+        this.$cookies.remove("token");
         this.$router.push('/')
       } 
     }
