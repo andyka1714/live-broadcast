@@ -129,7 +129,7 @@ header {
     width: 58.6px;
     height: 58.6px;
     margin-top: 10px;
-    margin-left: 30.4px;
+    margin-left: 30px;
     border: 1px dashed black;
     overflow: hidden;
     border-radius: 50%;
@@ -137,8 +137,8 @@ header {
     @media only screen and (max-width: 767px) {
       width: 49px;
       height: 49px;
-      margin-top: 22px;
-      margin-left: 13px;
+      margin-left: 20px;
+      margin-top: 15px;
     }
   }
 
@@ -178,11 +178,6 @@ header {
     &.login button {
       background-color: #219ea9;
       color: #fff;
-    }
-    .phone-kuki{
-      @media only screen and (min-width: 768px) {
-        display: none;
-      }
     }
     .FB-login {
       width: 100px;

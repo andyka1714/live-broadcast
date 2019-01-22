@@ -88,12 +88,6 @@ export default {
   mounted() {
     this.FBinit();
     this.getProduct();
-    this.productList = this.products.map(product => {
-      return {
-        ...product,
-        amount: 0
-      }
-    })
   },
   methods: {
     FBinit() {
@@ -111,7 +105,6 @@ export default {
     getProduct() {
       this.$store.dispatch('getProduct', this.stream_info.id)
         .then(res => {
-          console.log(res.data)
           this.$store.commit('setProduct', res.data);
         })
     },
@@ -124,6 +117,16 @@ export default {
       this.$store.dispatch('buyAProduct', data)
     }
   },
+  watch: {
+    products(val) {
+      this.productList = this.products.map(product => {
+      return {
+        ...product,
+        amount: 0
+      }
+    })
+    }
+  }
 }
 </script>
 
