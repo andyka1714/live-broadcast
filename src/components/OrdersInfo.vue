@@ -9,18 +9,90 @@
         label="統計結單商品"
         name="first"
       >
-        <el-form
-          :inline="true"
-          class="demo-form-inline"
+        <el-table
+          :data="orderList"
+          style="width: 100%"
         >
-          <el-form-item label="审批人">
-          </el-form-item>
-        </el-form>
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-form
+                label-position="left"
+                inline
+                class="demo-table-expand"
+              >
+                <el-form-item label="購買者">
+                  {{props.row.buyer.data.recipient_name}}
+                </el-form-item>
+                <el-form-item label="寄送地址">
+                  {{props.row.buyer.data.recipient_address}}
+                </el-form-item>
+                <el-form-item label="購買者電話">
+                  {{props.row.buyer.data.recipient_phone}}
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="商品名稱"
+            prop="product.title"
+          >
+          </el-table-column>
+          <el-table-column
+            label="商品單價"
+            prop="product.price"
+          >
+          </el-table-column>
+          <el-table-column
+            label="商品數量"
+            prop="quantity"
+          >
+          </el-table-column>
+        </el-table>
       </el-tab-pane>
       <el-tab-pane
         label="查看訂單"
         name="second"
-      >查看訂單</el-tab-pane>
+      >
+        <el-table
+          :data="orderList"
+          style="width: 100%"
+        >
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-form
+                label-position="left"
+                inline
+                class="demo-table-expand"
+              >
+                <el-form-item label="商品項目">
+                  {{props.row.product.title}}
+                </el-form-item>
+                <el-form-item label="商品單價">
+                  {{props.row.product.price}}
+                </el-form-item>
+                <el-form-item label="商品數量">
+                  {{props.row.quantity}}
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="購買者"
+            prop="buyer.data.recipient_name"
+          >
+          </el-table-column>
+          <el-table-column
+            label="購買者電話"
+            prop="buyer.data.recipient_phone"
+          >
+          </el-table-column>
+          <el-table-column
+            label="寄送地址"
+            prop="buyer.data.recipient_address"
+          >
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -34,7 +106,7 @@ export default {
     return {
       activeName: "",
       orderList: [],
-      buyerList: []
+      tableData: []
     };
   },
   mounted() {
@@ -70,8 +142,6 @@ export default {
       });
       FB.AppEvents.logPageView();
       this.getOrder();
-      this.orderList = this.orders.filter(order => order.product);
-      this.buyerList = this.orders.filter(order => order.buyer);
     },
     handleClick() {},
     getOrder() {
@@ -90,5 +160,17 @@ export default {
   .el-tabs__item {
     font-size: 20px;
   }
+}
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
 }
 </style>
