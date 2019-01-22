@@ -39,7 +39,7 @@ export default {
     border-radius: 10px;
     font-size: 24px;
     top: calc(50% - 29px);
-    left: calc(50% - 94px);
+    left: calc(50% - 70px);
     cursor: pointer;
   }
 }
