@@ -8,7 +8,15 @@
       <el-tab-pane
         label="統計結單商品"
         name="first"
-      >{{productList}}</el-tab-pane>
+      >
+        <el-form
+          :inline="true"
+          class="demo-form-inline"
+        >
+          <el-form-item label="审批人">
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
       <el-tab-pane
         label="查看訂單"
         name="second"
@@ -25,13 +33,14 @@ export default {
   data() {
     return {
       activeName: "",
-      productList: []
+      orderList: [],
+      buyerList: []
     };
   },
   mounted() {
     this.FBinit();
-    this.getProduct();
-    this.productList = this.products.map(product => {
+    this.getOrder();
+    this.orderList = this.orders.map(product => {
       return {
         ...product,
         amount: 0
@@ -40,15 +49,10 @@ export default {
   },
   computed: {
     ...mapState({
-      products: "products",
+      orders: "orders",
       stream_info: "stream_info",
       user_profile: "user_profile"
     }),
-    orders() {
-      return this.productList.filter(order => {
-        return order.amount !== 0;
-      });
-    },
     totalPrice() {
       const orders = this.orders;
       return orders.reduce((accumulator, currentValue) => {
@@ -65,12 +69,14 @@ export default {
         version: "v2.9"
       });
       FB.AppEvents.logPageView();
+      this.getOrder();
+      this.orderList = this.orders.filter(order => order.product);
+      this.buyerList = this.orders.filter(order => order.buyer);
     },
     handleClick() {},
-    getProduct() {
-      this.$store.dispatch("getProduct", this.stream_info.id).then(res => {
-        console.log(res.data);
-        this.$store.commit("setProduct", res.data);
+    getOrder() {
+      this.$store.dispatch("getOrder", this.stream_info.id).then(res => {
+        this.$store.commit("setOrder", res.data);
       });
     }
   }

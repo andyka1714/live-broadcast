@@ -1,10 +1,11 @@
 const state = {
-	token: '',
-	user_profile: {},
-	products: [],
-    stream_info: {
-    	name: '',
-    	url: ''
-    }
+  token: '',
+  user_profile: {},
+  products: [],
+  orders: [],
+  stream_info: {
+    name: '',
+    url: ''
+  }
 }
 export default state;
